@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Represent Packages with pkglite.txt</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+
+
+
+<style type="text/css">body {font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-size: 16px;line-height: 1.5;color: #212529;padding-top: 20px;padding-bottom: 20px;width: 90%;max-width: 800px;margin: auto;}a {color: #00857c;text-decoration: none;}a:hover, a:focus, a:active {color: #005c55;text-decoration: underline;}pre, code {font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}code {padding: .2em .4em;margin: 0;background-color: #f7f7f7;border-radius: 6px;}pre>code {padding: 0px;border-radius: 0px;}pre {background-color: #f7f7f7;}</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Represent Packages with pkglite.txt</h1>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#filename-and-extension"><span class="toc-section-number">1</span> Filename and extension</a></li>
+<li><a href="#file-format"><span class="toc-section-number">2</span> File format</a></li>
+<li><a href="#file-structure"><span class="toc-section-number">3</span> File structure</a></li>
+<li><a href="#field-names-and-values"><span class="toc-section-number">4</span> Field names and values</a>
+<ul>
+<li><a href="#package"><span class="toc-section-number">4.1</span> <code>Package</code></a></li>
+<li><a href="#file"><span class="toc-section-number">4.2</span> <code>File</code></a></li>
+<li><a href="#format"><span class="toc-section-number">4.3</span> <code>Format</code></a></li>
+<li><a href="#content"><span class="toc-section-number">4.4</span> <code>Content</code></a></li>
+</ul></li>
+</ul>
+</div>
+
+<p>The output file of <code>pkglite::pack()</code> uses a standard file format to allow the storage, exchange, and parsing of the packaged assets. The specification for this file is detailed below.</p>
+<div id="filename-and-extension" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Filename and extension</h1>
+<p>Unless specified, the output file is automatically named.</p>
+<ul>
+<li>A single R package named <code>pkg1</code> is packed into <code>pkg1.txt</code>.</li>
+<li>Multiple R packages named <code>pkg1</code>, <code>pkg2</code>, … are packed into <code>pkglite.txt</code>.</li>
+</ul>
+<p>The file extension is <code>.txt</code> so that one can recognize, open, and inspect it directly using regular text editors.</p>
+</div>
+<div id="file-format" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> File format</h1>
+<p>The overall goal here is to make the file format unambiguous, human-friendly, and machine-readable. For <code>pkglite.txt</code>, we follow the <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html">DCF (Debian Control File) format</a>, used by Debian, R, and RStudio IDE. The minimalist, time-tested format allows us to save key-value data in plain text that humans can easily read and write. The format is also extendable to include more information about the assets being packed.</p>
+</div>
+<div id="file-structure" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> File structure</h1>
+<p>A <code>pkglite.txt</code> is structured following these rules:</p>
+<ul>
+<li>One file contains multiple DCF format blocks.</li>
+<li>Each block includes the metadata and the content of one file in an R package.</li>
+<li>Each block is separated by a blank line. The last block has a trailing blank line.</li>
+</ul>
+</div>
+<div id="field-names-and-values" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> Field names and values</h1>
+<p>Each block has at least four key-value pairs called <strong>fields</strong>. For example:</p>
+<pre><code>Package: pkglite
+File: R/pkglite-package.R
+Format: text
+Content:
+  #&#39; @keywords internal
+  &quot;_PACKAGE&quot;</code></pre>
+<p>The keys and values in these fields are separated by a colon and a whitespace except for <code>Content</code>, whose value part starts in a new line.</p>
+<div id="package" class="section level2" number="4.1">
+<h2 number="4.1"><span class="header-section-number">4.1</span> <code>Package</code></h2>
+<p>R package name. Since one <code>pkglite.txt</code> might contain files from multiple packages, this field is used to declare the package the file is under explicitly.</p>
+<p>This design implies that each <code>pkglite.txt</code> can only store multiple R packages with unique names.</p>
+</div>
+<div id="file" class="section level2" number="4.2">
+<h2 number="4.2"><span class="header-section-number">4.2</span> <code>File</code></h2>
+<p>The relative path (to the package root) of the file.</p>
+</div>
+<div id="format" class="section level2" number="4.3">
+<h2 number="4.3"><span class="header-section-number">4.3</span> <code>Format</code></h2>
+<p>File format category. It can be <code>text</code> or <code>binary</code>. This determines how the file content will be read and written.</p>
+</div>
+<div id="content" class="section level2" number="4.4">
+<h2 number="4.4"><span class="header-section-number">4.4</span> <code>Content</code></h2>
+<p>The file content. The text format files are stored as-is, while the binary files are stored in the hexadecimal format, following the RTF format convention. In both cases, two whitespaces are added before each line of the value part.</p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Generate File Specifications</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-size: 16px;line-height: 1.5;color: #212529;padding-top: 20px;padding-bottom: 20px;width: 90%;max-width: 800px;margin: auto;}a {color: #00857c;text-decoration: none;}a:hover, a:focus, a:active {color: #005c55;text-decoration: underline;}pre, code {font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}code {padding: .2em .4em;margin: 0;background-color: #f7f7f7;border-radius: 6px;}pre>code {padding: 0px;border-radius: 0px;}pre {background-color: #f7f7f7;}</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Generate File Specifications</h1>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#file-specification"><span class="toc-section-number">1</span> File specification</a></li>
+<li><a href="#file-collection"><span class="toc-section-number">2</span> File collection</a></li>
+<li><a href="#file-specification-templates"><span class="toc-section-number">3</span> File specification templates</a></li>
+<li><a href="#file-specification-usage-patterns"><span class="toc-section-number">4</span> File specification usage patterns</a></li>
+<li><a href="#default-file-specification"><span class="toc-section-number">5</span> Default file specification</a></li>
+<li><a href="#automatic-file-specification"><span class="toc-section-number">6</span> Automatic file specification</a></li>
+</ul>
+</div>
+
+<p>In this vignette, we discuss how to write file specifications and use them to create a file collection. They help define the file packing scope in the source R package.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(<span class="st">&quot;pkglite&quot;</span>)</span></code></pre></div>
+<div id="file-specification" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> File specification</h1>
+<p>In <code>pkglite</code>, a <strong>file specification</strong> defines the parameters to locate the files matching specific criteria under an R package. One can use <code>file_spec()</code> to create a file specification.</p>
+<p>For example, to match the <code>.R</code> files under the <code>R/</code> folder, use</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>fs &lt;-<span class="st"> </span><span class="kw">file_spec</span>(</span>
+<span id="cb2-2"><a href="#cb2-2"></a>  <span class="st">&quot;R/&quot;</span>,</span>
+<span id="cb2-3"><a href="#cb2-3"></a>  <span class="dt">pattern =</span> <span class="st">&quot;</span><span class="ch">\\</span><span class="st">.R$&quot;</span>, <span class="dt">format =</span> <span class="st">&quot;text&quot;</span>,</span>
+<span id="cb2-4"><a href="#cb2-4"></a>  <span class="dt">recursive =</span> <span class="ot">FALSE</span>, <span class="dt">ignore_case =</span> <span class="ot">TRUE</span>, <span class="dt">all_files =</span> <span class="ot">FALSE</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>)</span>
+<span id="cb2-6"><a href="#cb2-6"></a></span>
+<span id="cb2-7"><a href="#cb2-7"></a>fs</span></code></pre></div>
+<pre><code></code></pre>
+<pre><code>-- File specification ----------------------------------------------------------</code></pre>
+<pre><code>* Relative path: R/</code></pre>
+<pre><code>* Pattern: &#39;\\.R$&#39;</code></pre>
+<pre><code>* Format: &#39;text&#39;</code></pre>
+<pre><code>* Recursive: FALSE</code></pre>
+<pre><code>* Ignore case: TRUE</code></pre>
+<pre><code>* All files: FALSE</code></pre>
+</div>
+<div id="file-collection" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> File collection</h1>
+<p>A <strong>file collection</strong> is generated by evaluating file specification(s) under a package directory. It contains the metadata of the list of matching files. Use <code>collate()</code> to create a file collection:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>pkg &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;examples/pkg1/&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;pkglite&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>pkg <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collate</span>(fs)</span></code></pre></div>
+<pre><code></code></pre>
+<pre><code>-- File collection -------------------------------------------------------------</code></pre>
+<pre><code>-- Package: pkg1 ---------------------------------------------------------------</code></pre>
+<pre><code>          path_rel format
+1         R/data.R   text
+2        R/hello.R   text
+3 R/pkg1-package.R   text</code></pre>
+</div>
+<div id="file-specification-templates" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> File specification templates</h1>
+<p>We have included a few file specifications to cover the common file structures in an R package. See <code>?file_spec_templates</code> for details. We will use some of them to demonstrate how to combine them to cover an entire package.</p>
+</div>
+<div id="file-specification-usage-patterns" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> File specification usage patterns</h1>
+<p>To generate a file collection that includes a core set of files under the package root, use</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>pkg <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collate</span>(<span class="kw">file_root_core</span>())</span></code></pre></div>
+<pre><code></code></pre>
+<pre><code>-- File collection -------------------------------------------------------------</code></pre>
+<pre><code>-- Package: pkg1 ---------------------------------------------------------------</code></pre>
+<pre><code>     path_rel format
+1 DESCRIPTION   text
+2   NAMESPACE   text
+3     NEWS.md   text
+4   README.md   text</code></pre>
+<p>To include all files under the package root, use</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>pkg <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collate</span>(<span class="kw">file_root_all</span>())</span></code></pre></div>
+<pre><code></code></pre>
+<pre><code>-- File collection -------------------------------------------------------------</code></pre>
+<pre><code>-- Package: pkg1 ---------------------------------------------------------------</code></pre>
+<pre><code>     path_rel format
+1 .Rproj.user   text
+2 DESCRIPTION   text
+3   NAMESPACE   text
+4     NEWS.md   text
+5   README.md   text</code></pre>
+<p>Sometimes, a file collection might contain files or directories that should always be excluded, such as the files defined in <code>pattern_file_sanitize()</code>. One could use <code>sanitize_file_collection()</code> to remove such items from the file collection:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>pkg <span class="op">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2"></a><span class="st">  </span><span class="kw">collate</span>(<span class="kw">file_root_all</span>()) <span class="op">%&gt;%</span></span>
+<span id="cb27-3"><a href="#cb27-3"></a><span class="st">  </span><span class="kw">sanitize_file_collection</span>()</span></code></pre></div>
+<pre><code></code></pre>
+<pre><code>-- File collection -------------------------------------------------------------</code></pre>
+<pre><code>-- Package: pkg1 ---------------------------------------------------------------</code></pre>
+<pre><code>     path_rel format
+1 DESCRIPTION   text
+2   NAMESPACE   text
+3     NEWS.md   text
+4   README.md   text</code></pre>
+<p>We can feed one or more file specifications to <code>collate()</code>. The union of the matched files will be returned:</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a>pkg <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collate</span>(<span class="kw">file_r</span>(), <span class="kw">file_man</span>())</span></code></pre></div>
+<pre><code></code></pre>
+<pre><code>-- File collection -------------------------------------------------------------</code></pre>
+<pre><code>-- Package: pkg1 ---------------------------------------------------------------</code></pre>
+<pre><code>              path_rel format
+1             R/data.R   text
+2            R/hello.R   text
+3     R/pkg1-package.R   text
+4        R/sysdata.rda binary
+5       man/dataset.Rd   text
+6   man/hello_world.Rd   text
+7  man/pkg1-package.Rd   text
+8 man/figures/logo.png binary</code></pre>
+<p>If file specification did not match any files, an empty file collection is returned:</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a>pkg <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collate</span>(<span class="kw">file_src</span>())</span></code></pre></div>
+<pre><code></code></pre>
+<pre><code>-- File collection -------------------------------------------------------------</code></pre>
+<pre><code>-- Package: pkg1 ---------------------------------------------------------------</code></pre>
+<pre><code>[1] path_rel format  
+&lt;0 rows&gt; (or 0-length row.names)</code></pre>
+<p>Naturally, this would not add additional files to the collection:</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a>pkg <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collate</span>(<span class="kw">file_r</span>(), <span class="kw">file_man</span>(), <span class="kw">file_src</span>())</span></code></pre></div>
+<pre><code></code></pre>
+<pre><code>-- File collection -------------------------------------------------------------</code></pre>
+<pre><code>-- Package: pkg1 ---------------------------------------------------------------</code></pre>
+<pre><code>              path_rel format
+1             R/data.R   text
+2            R/hello.R   text
+3     R/pkg1-package.R   text
+4        R/sysdata.rda binary
+5       man/dataset.Rd   text
+6   man/hello_world.Rd   text
+7  man/pkg1-package.Rd   text
+8 man/figures/logo.png binary</code></pre>
+</div>
+<div id="default-file-specification" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> Default file specification</h1>
+<p><code>file_default()</code> offers a default combination of the file specification templates.</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a>pkg <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collate</span>(<span class="kw">file_default</span>())</span></code></pre></div>
+<pre><code></code></pre>
+<pre><code>-- File collection -------------------------------------------------------------</code></pre>
+<pre><code>-- Package: pkg1 ---------------------------------------------------------------</code></pre>
+<pre><code>                path_rel format
+1            DESCRIPTION   text
+2              NAMESPACE   text
+3                NEWS.md   text
+4              README.md   text
+5               R/data.R   text
+6              R/hello.R   text
+7       R/pkg1-package.R   text
+8          R/sysdata.rda binary
+9         man/dataset.Rd   text
+10    man/hello_world.Rd   text
+11   man/pkg1-package.Rd   text
+12  man/figures/logo.png binary
+13 vignettes/example.bib   text
+14    vignettes/pkg1.Rmd   text
+15      data/dataset.rda binary</code></pre>
+</div>
+<div id="automatic-file-specification" class="section level1" number="6">
+<h1 number="6"><span class="header-section-number">6</span> Automatic file specification</h1>
+<p><code>file_auto()</code> provides a specification that lists all files (with an extension) under a folder recursively. It also guesses the file format type based on the file extension. This is useful for directories like <code>inst/</code> that do not share a standard structure or filename pattern across packages.</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a>pkg <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collate</span>(<span class="kw">file_auto</span>(<span class="st">&quot;inst/&quot;</span>))</span></code></pre></div>
+<pre><code></code></pre>
+<pre><code>-- File collection -------------------------------------------------------------</code></pre>
+<pre><code>-- Package: pkg1 ---------------------------------------------------------------</code></pre>
+<pre><code>                  path_rel format
+1 inst/extdata/dataset.tsv   text</code></pre>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
