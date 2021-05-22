@@ -122,31 +122,6 @@ testthat::test_that("fs_to_df evaluates a file spec and return the data frame co
   testthat::expect_length(object = actual$path_abs, n = nrow(expected))
 })
 
-testthat::test_that("is_file_collection detects whether an object is of class file collection", {
-  pkg <- "pkg1"
-  testthat::expect_false(
-    pkg %>% find_package() %>%
-      fs_to_df(file_spec = file_src()) %>%
-      is_file_collection()
-  )
-})
-
-testthat::test_that("print returns a data frame as expected", {
-  pkg <- "pkg1"
-  actual <- pkg %>%
-    find_package() %>%
-    collate(file_vignettes()) %>%
-    print() %>%
-    `[[`("df")
-  files <- pkg %>% find_files(dir = "vignettes", pattern = "*")
-  expected <- data.frame(
-    "path_rel" = files$files,
-    "format" = rep("text", length(files$files)),
-    stringsAsFactors = FALSE
-  )
-  testthat::expect_identical(actual[, -1], expected)
-})
-
 testthat::test_that("get_pkg_name returns the package name correctly", {
   testthat::expect_equal(get_pkg_name(path = find_package("pkg1")), "pkg1")
   testthat::expect_equal(get_pkg_name(path = find_package("pkg2")), "pkg2")

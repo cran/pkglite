@@ -1,4 +1,5 @@
-#  Copyright (c) 2021 Merck Sharp & Dohme Corp. a subsidiary of Merck & Co., Inc., Kenilworth, NJ, USA.
+#  Copyright (c) 2021 Merck Sharp & Dohme Corp., a subsidiary of
+#  Merck & Co., Inc., Kenilworth, NJ, USA.
 #
 #  This file is part of the pkglite program.
 #
@@ -57,16 +58,12 @@ collate <- function(pkg = ".", ...) {
   lst_spec <- flatten_file_spec(lst_spec)
   k <- length(lst_spec)
   if (k == 0L) stop("Please provide at least one file specification")
-  lst_collection <- lapply(1:k, function(i) fs_to_df(path, lst_spec[[i]]))
+  lst_collection <- lapply(seq_len(k), function(i) fs_to_df(path, lst_spec[[i]]))
   df <- do.call(rbind, lst_collection)
   # remove duplicates
   df <- unique(df)
 
-  # bind everything together ----
-  lst <- list("pkg_name" = pkg_name, "df" = df)
-  class(lst) <- "file_collection"
-
-  lst
+  new_file_collection(pkg_name, df)
 }
 
 #' Evaluate a file specification and return a file collection data frame
@@ -98,7 +95,7 @@ fs_to_df <- function(pkg_path, file_spec) {
   }
 
   full_path <- normalizePath(full_path, winslash = "/")
-  file_path_abs <- list.files(
+  file_path_abs <- list_files(
     path = full_path, pattern = file_spec$pattern, full.names = TRUE,
     recursive = file_spec$recursive, ignore.case = file_spec$ignore_case,
     all.files = file_spec$all_files, include.dirs = FALSE, no.. = TRUE
@@ -115,99 +112,6 @@ fs_to_df <- function(pkg_path, file_spec) {
   df$"format" <- file_spec$format
 
   df
-}
-
-#' Is this a file collection object?
-#'
-#' @param object Any R object
-#'
-#' @return Logical. `TRUE` if it is a file collection object,
-#' `FALSE` otherwise.
-#'
-#' @section Specification:
-#' \if{latex}{
-#'   \itemize{
-#'     \item Check if the object has the class \code{file_collection}.
-#'   }
-#' }
-#' \if{html}{The contents of this section are shown in PDF user manual only.}
-#'
-#' @export is_file_collection
-#'
-#' @examples
-#' system.file("examples/pkg1/", package = "pkglite") %>%
-#'   collate(file_default()) %>%
-#'   is_file_collection()
-is_file_collection <- function(object) {
-  if ("file_collection" %in% class(object)) TRUE else FALSE
-}
-
-#' Print a file collection
-#'
-#' @param x An object of class `file_collection`.
-#' @param ... Additional parameters for [print()] (not used).
-#'
-#' @return The input `file_collection` object.
-#'
-#' @section Specification:
-#' \if{latex}{
-#'   \itemize{
-#'     \item Print the metadata and the data frame in a file collection object.
-#'   }
-#' }
-#' \if{html}{The contents of this section are shown in PDF user manual only.}
-#'
-#' @method print file_collection
-#'
-#' @importFrom cli cli_h1 cli_rule
-#'
-#' @export
-#'
-#' @examples
-#' fc <- system.file("examples/pkg1/", package = "pkglite") %>%
-#'   collate(file_default())
-#' fc
-print.file_collection <- function(x, ...) {
-  pkg_name <- x$pkg_name
-  df <- x$df
-  df$"path_abs" <- NULL # only prints relative path
-
-  cli_h1("File collection")
-  cli_rule(left = "Package: {.pkg {pkg_name}}")
-  print(df)
-  invisible(x)
-}
-
-#' Sanitize file collection
-#'
-#' Remove commonly excluded files and directories from a file collection.
-#'
-#' @param x a file collection object
-#'
-#' @return The sanitized file collection object.
-#'
-#' @section Specification:
-#' \if{latex}{
-#'   \itemize{
-#'     \item Remove the files whose names match certain patterns from the
-#'     file collection and return a sanitized file collection.
-#'   }
-#' }
-#' \if{html}{The contents of this section are shown in PDF user manual only.}
-#'
-#' @export sanitize_file_collection
-#'
-#' @examples
-#' system.file("examples/pkg1/", package = "pkglite") %>%
-#'   collate(file_default()) %>%
-#'   sanitize_file_collection()
-sanitize_file_collection <- function(x) {
-  lst <- x
-  df <- lst$df
-  df <- df[!grepl(cat_patterns(pattern_file_sanitize()), df$"path_abs"), ]
-  row.names(df) <- NULL
-  lst$df <- df
-  lst
 }
 
 #' Flatten a nested list of file specifications to a single-level list
@@ -295,4 +199,25 @@ get_pkg_name <- function(path) {
   desc_file <- normalizePath(path, winslash = "/")
   pkg_name <- unname(read.dcf(desc_file)[, "Package"])
   pkg_name
+}
+
+#' List the files in a directory without returning any subdirectories
+#'
+#' @param ... Arguments passed to [list.files()].
+#'
+#' @section Specification:
+#' \if{latex}{
+#'   \itemize{
+#'     \item List files using \code{list.files()}.
+#'     \item Test if the results are files using \code{file_test()}.
+#'     \item Keep the files only.
+#'   }
+#' }
+#' \if{html}{The contents of this section are shown in PDF user manual only.}
+#'
+#' @importFrom utils file_test
+#'
+#' @noRd
+list_files <- function(...) {
+  Filter(function(x) file_test("-f", x), list.files(...))
 }

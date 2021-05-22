@@ -1,4 +1,5 @@
-#  Copyright (c) 2021 Merck Sharp & Dohme Corp. a subsidiary of Merck & Co., Inc., Kenilworth, NJ, USA.
+#  Copyright (c) 2021 Merck Sharp & Dohme Corp., a subsidiary of
+#  Merck & Co., Inc., Kenilworth, NJ, USA.
 #
 #  This file is part of the pkglite program.
 #
@@ -92,7 +93,6 @@ verify_ascii <- function(input, quiet = FALSE) {
 remove_content <- function(input, x, quiet = FALSE) {
   if (missing(input)) stop("Please provide an input file")
   y <- readLines(input)
-  nlines <- length(y)
 
   idx_content <- which(substr(y, 1L, 2L) == "  ")
   y_content <- substring(y[idx_content], 3L)
@@ -101,7 +101,7 @@ remove_content <- function(input, x, quiet = FALSE) {
   k <- length(idx_match)
   if (k > 0L) {
     if (!quiet) {
-      lapply(1:k, function(i) {
+      lapply(seq_len(k), function(i) {
         idx <- idx_content[idx_match][i]
         cli_text(left = "Removing line {.field {idx}}")
       })

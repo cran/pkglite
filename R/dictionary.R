@@ -1,4 +1,5 @@
-#  Copyright (c) 2021 Merck Sharp & Dohme Corp. a subsidiary of Merck & Co., Inc., Kenilworth, NJ, USA.
+#  Copyright (c) 2021 Merck Sharp & Dohme Corp., a subsidiary of
+#  Merck & Co., Inc., Kenilworth, NJ, USA.
 #
 #  This file is part of the pkglite program.
 #
@@ -79,7 +80,8 @@ ext_binary <- function(flat = FALSE) {
       "ico", "webp", "eps", "pdf"
     ),
     "src" = c("o", "so"),
-    "mso" = c("docx", "xlsx", "pptx", "doc", "xls", "ppt")
+    "mso" = c("docx", "xlsx", "pptx", "doc", "xls", "ppt"),
+    "sas" = c("sas7bdat", "sas7bcat", "xpt", "xpt5", "xpt8")
   )
   if (flat) unique(unlist(x)) else x
 }

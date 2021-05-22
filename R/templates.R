@@ -1,4 +1,5 @@
-#  Copyright (c) 2021 Merck Sharp & Dohme Corp. a subsidiary of Merck & Co., Inc., Kenilworth, NJ, USA.
+#  Copyright (c) 2021 Merck Sharp & Dohme Corp., a subsidiary of
+#  Merck & Co., Inc., Kenilworth, NJ, USA.
 #
 #  This file is part of the pkglite program.
 #
@@ -24,6 +25,7 @@
 #' * `file_src()` - files under `src/`
 #' * `file_vignettes()` - files under `vignettes/`
 #' * `file_data()` - files under `data/`
+#' * `file_tests()` - files under `tests/`
 #'
 #' @return A file specification or a list of file specifications.
 #'
@@ -117,6 +119,12 @@ file_data <- function() {
     path = "data/", pattern = cat_patterns(ends_with(c("rda", "RData"))),
     format = "binary", recursive = FALSE, ignore_case = TRUE, all_files = FALSE
   )
+}
+
+#' @rdname file_spec_templates
+#' @export file_tests
+file_tests <- function() {
+  file_auto(path = "tests/")
 }
 
 #' File specification (default combination)

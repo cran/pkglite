@@ -16,9 +16,9 @@ vignette: >
 knitr::opts_chunk$set(comment = "")
 ```
 
-In this vignette, we discuss how to write file specifications and use them
-to create a file collection. They help define the file packing scope in the
-source R package.
+File specifications define the file packing scope in the source R package.
+We will discuss how to write file specifications and use them to create
+a file collection.
 
 ```{r}
 library("pkglite")
@@ -76,17 +76,6 @@ To include all files under the package root, use
 
 ```{r}
 pkg %>% collate(file_root_all())
-```
-
-Sometimes, a file collection might contain files or directories that should
-always be excluded, such as the files defined in `pattern_file_sanitize()`.
-One could use `sanitize_file_collection()` to remove such items from the
-file collection:
-
-```{r}
-pkg %>%
-  collate(file_root_all()) %>%
-  sanitize_file_collection()
 ```
 
 We can feed one or more file specifications to `collate()`.
