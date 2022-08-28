@@ -1,6 +1,6 @@
 Package: pkglite
 Title: Compact Package Representations
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: c(
     person("Nan", "Xiao", email = "nan.xiao1@merck.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0250-5673")),
@@ -19,11 +19,11 @@ BugReports: https://github.com/Merck/pkglite/issues
 Encoding: UTF-8
 VignetteBuilder: knitr
 Depends: R (>= 3.5.0)
-Imports: cli, magrittr, remotes
+Imports: crayon, magrittr, remotes
 Suggests: knitr, rmarkdown, testthat, covr
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
 NeedsCompilation: no
-Packaged: 2021-05-21 21:56:27 UTC; xiaonan4
+Packaged: 2022-08-28 22:23:00 UTC; nanx
 Author: Nan Xiao [aut, cre] (<https://orcid.org/0000-0002-0250-5673>),
   Yilong Zhang [aut],
   Keaven Anderson [aut],
@@ -32,4 +32,4 @@ Author: Nan Xiao [aut, cre] (<https://orcid.org/0000-0002-0250-5673>),
   Merck Sharp & Dohme Corp [cph]
 Maintainer: Nan Xiao <nan.xiao1@merck.com>
 Repository: CRAN
-Date/Publication: 2021-05-22 04:10:03 UTC
+Date/Publication: 2022-08-28 23:10:02 UTC
