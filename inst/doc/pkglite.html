@@ -49,7 +49,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -60,7 +60,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -203,58 +203,58 @@ reproducibility.</p>
 <h2>Example workflow</h2>
 <p>To demonstrate the basic usage of pkglite, we will show how to pack
 and unpack one or multiple R packages.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;pkglite&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;pkglite&quot;</span>)</span></code></pre></div>
 <div id="pack-one-package" class="section level3">
 <h3>Pack one package</h3>
 <p>First, locate the input package directory and the output file:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pkg <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;examples/pkg1&quot;</span>, <span class="at">package =</span> <span class="st">&quot;pkglite&quot;</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>txt <span class="ot">&lt;-</span> <span class="fu">tempfile</span>(<span class="at">fileext =</span> <span class="st">&quot;.txt&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>pkg <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;examples/pkg1&quot;</span>, <span class="at">package =</span> <span class="st">&quot;pkglite&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>txt <span class="ot">&lt;-</span> <span class="fu">tempfile</span>(<span class="at">fileext =</span> <span class="st">&quot;.txt&quot;</span>)</span></code></pre></div>
 <p>Use the following chain of calls to pack a default set of files in
 the R package under directory <code>pkg</code> into the file
 <code>txt</code>:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pkg <span class="sc">%&gt;%</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collate</span>(<span class="fu">file_default</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pack</span>(<span class="at">output =</span> txt, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>pkg <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">collate</span>(<span class="fu">file_default</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="fu">pack</span>(<span class="at">output =</span> txt, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <p>The <code>collate()</code> function evaluates one or more
 <strong>file specifications</strong> to generate a <strong>file
 collection</strong>. They fully determine the scope of the files to pack
 here. For details, check
 <code>vignette(&quot;filespec&quot;, package = &quot;pkglite&quot;)</code>.</p>
 <p>Check the first lines of the output file:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>txt <span class="sc">%&gt;%</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">readLines</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">11</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Generated by pkglite: do not edit by hand</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Use pkglite::unpack() to restore the packages</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Package: pkg1</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; File: DESCRIPTION</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Format: text</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Content:</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Package: pkg1</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Type: Package</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Title: Example Package One</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Version: 0.1.0</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>txt <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">readLines</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">11</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt; # Generated by pkglite: do not edit by hand</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt; # Use pkglite::unpack() to restore the packages</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt; Package: pkg1</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt; File: DESCRIPTION</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt; Format: text</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; Content:</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt;   Package: pkg1</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt;   Type: Package</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt;   Title: Example Package One</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt;   Version: 0.1.0</span></span></code></pre></div>
 <p>Check the number of lines the output file:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>txt <span class="sc">%&gt;%</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">readLines</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">length</span>()</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1081</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>txt <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">readLines</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">length</span>()</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt; [1] 1081</span></span></code></pre></div>
 </div>
 <div id="unpack-one-package" class="section level3">
 <h3>Unpack one package</h3>
 <p>To unpack (restore) the file structures from the text file, use
 <code>unpack()</code>:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">tempdir</span>(), <span class="st">&quot;onepkg&quot;</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>txt <span class="sc">%&gt;%</span> <span class="fu">unpack</span>(<span class="at">output =</span> out, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">tempdir</span>(), <span class="st">&quot;onepkg&quot;</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>txt <span class="sc">%&gt;%</span> <span class="fu">unpack</span>(<span class="at">output =</span> out, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <p>This will create a directory named after the R package under the
 output directory:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>out <span class="sc">%&gt;%</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">file.path</span>(<span class="st">&quot;pkg1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list.files</span>()</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;DESCRIPTION&quot; &quot;NAMESPACE&quot;   &quot;NEWS.md&quot;     &quot;R&quot;           &quot;README.md&quot;  </span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [6] &quot;data&quot;        &quot;man&quot;         &quot;vignettes&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>out <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="fu">file.path</span>(<span class="st">&quot;pkg1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="fu">list.files</span>()</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt; [1] &quot;DESCRIPTION&quot; &quot;NAMESPACE&quot;   &quot;NEWS.md&quot;     &quot;R&quot;           &quot;README.md&quot;  </span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt; [6] &quot;data&quot;        &quot;man&quot;         &quot;vignettes&quot;</span></span></code></pre></div>
 <p>To install the packages after unpacking them, use
 <code>unpack(..., install = TRUE)</code>.</p>
 </div>
@@ -263,37 +263,37 @@ output directory:</p>
 <p><code>pack()</code> accepts one or more input directories. Therefore,
 one can pack multiple R packages (file collections) into one file at
 once:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>pkg1 <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;examples/pkg1&quot;</span>, <span class="at">package =</span> <span class="st">&quot;pkglite&quot;</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>pkg2 <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;examples/pkg2&quot;</span>, <span class="at">package =</span> <span class="st">&quot;pkglite&quot;</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>fc1 <span class="ot">&lt;-</span> pkg1 <span class="sc">%&gt;%</span> <span class="fu">collate</span>(<span class="fu">file_default</span>())</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>fc2 <span class="ot">&lt;-</span> pkg2 <span class="sc">%&gt;%</span> <span class="fu">collate</span>(<span class="fu">file_default</span>())</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">pack</span>(fc1, fc2, <span class="at">output =</span> txt, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>pkg1 <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;examples/pkg1&quot;</span>, <span class="at">package =</span> <span class="st">&quot;pkglite&quot;</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>pkg2 <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;examples/pkg2&quot;</span>, <span class="at">package =</span> <span class="st">&quot;pkglite&quot;</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>fc1 <span class="ot">&lt;-</span> pkg1 <span class="sc">%&gt;%</span> <span class="fu">collate</span>(<span class="fu">file_default</span>())</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>fc2 <span class="ot">&lt;-</span> pkg2 <span class="sc">%&gt;%</span> <span class="fu">collate</span>(<span class="fu">file_default</span>())</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="fu">pack</span>(fc1, fc2, <span class="at">output =</span> txt, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <p>Since the two example packages have almost identical content, the
 number of lines in the text file is doubled here (three header lines
 excluded):</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>txt <span class="sc">%&gt;%</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">readLines</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">length</span>()</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 2159</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>txt <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="fu">readLines</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="fu">length</span>()</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt; [1] 2159</span></span></code></pre></div>
 </div>
 <div id="unpack-multiple-packages" class="section level3">
 <h3>Unpack multiple packages</h3>
 <p>Use the same call to unpack (and install) multiple R packages from
 the text file:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">tempdir</span>(), <span class="st">&quot;twopkgs&quot;</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>txt <span class="sc">%&gt;%</span> <span class="fu">unpack</span>(<span class="at">output =</span> out, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>out <span class="sc">%&gt;%</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">file.path</span>(<span class="st">&quot;pkg1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list.files</span>()</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;DESCRIPTION&quot; &quot;NAMESPACE&quot;   &quot;NEWS.md&quot;     &quot;R&quot;           &quot;README.md&quot;  </span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [6] &quot;data&quot;        &quot;man&quot;         &quot;vignettes&quot;</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>out <span class="sc">%&gt;%</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">file.path</span>(<span class="st">&quot;pkg2&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list.files</span>()</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;DESCRIPTION&quot; &quot;NAMESPACE&quot;   &quot;NEWS.md&quot;     &quot;R&quot;           &quot;README.md&quot;  </span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [6] &quot;data&quot;        &quot;man&quot;         &quot;vignettes&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">tempdir</span>(), <span class="st">&quot;twopkgs&quot;</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>txt <span class="sc">%&gt;%</span> <span class="fu">unpack</span>(<span class="at">output =</span> out, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>out <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  <span class="fu">file.path</span>(<span class="st">&quot;pkg1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>  <span class="fu">list.files</span>()</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="co">#&gt; [1] &quot;DESCRIPTION&quot; &quot;NAMESPACE&quot;   &quot;NEWS.md&quot;     &quot;R&quot;           &quot;README.md&quot;  </span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="co">#&gt; [6] &quot;data&quot;        &quot;man&quot;         &quot;vignettes&quot;</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>out <span class="sc">%&gt;%</span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>  <span class="fu">file.path</span>(<span class="st">&quot;pkg2&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>  <span class="fu">list.files</span>()</span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a><span class="co">#&gt; [1] &quot;DESCRIPTION&quot; &quot;NAMESPACE&quot;   &quot;NEWS.md&quot;     &quot;R&quot;           &quot;README.md&quot;  </span></span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a><span class="co">#&gt; [6] &quot;data&quot;        &quot;man&quot;         &quot;vignettes&quot;</span></span></code></pre></div>
 <p>The file format specification for <code>pkglite.txt</code> is
 described in <code>vignette(&quot;format&quot;, package = &quot;pkglite&quot;)</code>.</p>
 </div>
@@ -301,14 +301,14 @@ described in <code>vignette(&quot;format&quot;, package = &quot;pkglite&quot;)</
 <div id="helper-functions" class="section level2">
 <h2>Helper functions</h2>
 <p>Verify if the text file contains only ASCII characters:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>txt <span class="sc">%&gt;%</span> <span class="fu">verify_ascii</span>()</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>txt <span class="sc">%&gt;%</span> <span class="fu">verify_ascii</span>()</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <p>Remove lines of file content from the text file:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>txt <span class="sc">%&gt;%</span> <span class="fu">remove_content</span>(<span class="fu">c</span>(<span class="st">&quot;## New Features&quot;</span>, <span class="st">&quot;## Improvements&quot;</span>), <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>txt <span class="sc">%&gt;%</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">readLines</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">length</span>()</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 2157</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>txt <span class="sc">%&gt;%</span> <span class="fu">remove_content</span>(<span class="fu">c</span>(<span class="st">&quot;## New Features&quot;</span>, <span class="st">&quot;## Improvements&quot;</span>), <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>txt <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>  <span class="fu">readLines</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>  <span class="fu">length</span>()</span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="co">#&gt; [1] 2157</span></span></code></pre></div>
 </div>
 
 
