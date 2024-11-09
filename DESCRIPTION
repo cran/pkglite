@@ -1,6 +1,6 @@
 Package: pkglite
 Title: Compact Package Representations
-Version: 0.2.3
+Version: 0.2.4
 Authors@R: c(
     person("Nan", "Xiao", email = "nan.xiao1@merck.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0250-5673")),
@@ -24,7 +24,7 @@ Imports: crayon, magrittr, remotes
 Suggests: covr, knitr, rmarkdown, testthat
 RoxygenNote: 7.3.2
 NeedsCompilation: no
-Packaged: 2024-09-25 02:50:55 UTC; xiaonan4
+Packaged: 2024-11-09 21:33:17 UTC; xiaonan4
 Author: Nan Xiao [aut, cre] (<https://orcid.org/0000-0002-0250-5673>),
   Yilong Zhang [aut],
   Keaven Anderson [aut],
@@ -34,4 +34,4 @@ Author: Nan Xiao [aut, cre] (<https://orcid.org/0000-0002-0250-5673>),
   Merck & Co., Inc., Rahway, NJ, USA and its affiliates [cph]
 Maintainer: Nan Xiao <nan.xiao1@merck.com>
 Repository: CRAN
-Date/Publication: 2024-09-25 09:20:02 UTC
+Date/Publication: 2024-11-09 21:50:02 UTC

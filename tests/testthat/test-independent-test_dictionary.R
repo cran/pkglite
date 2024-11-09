@@ -6,7 +6,7 @@ test_that("Test ext_text() generate the right string list", {
     "src" = c(
       "c", "h", "cpp", "cc", "ipp", "cxx", "hpp", "hxx", "hh", "cu", "cuh",
       "f", "f90", "f95", "f03",
-      "win", "in", "ucrt", "ac", "mk", "guess"
+      "win", "ucrt", "in", "ac", "mk", "guess", "def"
     ),
     "vignette" = c(
       "Rmd", "qmd", "orig", "md", "tex", "csl", "Rnw", "Snw", "Rtex", "Stex",
@@ -77,8 +77,9 @@ test_that("Test ext_binary() generate the right string list", {
     "audio" = c("wav", "mp3", "mid", "ogg", "au", "m4a"),
     "video" = c("mp4", "avi", "mov", "mkv", "webm"),
     "generic" = c(
-      "bin", "epub", "h5", "hdf5", "onnx",
-      "parquet", "feather", "pkl", "npy"
+      "bin", "epub", "hdf5", "h5", "parquet", "feather", "msgpack",
+      "pickle", "pkl", "npy", "npz", "safetensors",
+      "pt", "pth", "keras", "tfrecord", "pb", "ckpt", "onnx"
     )
   )
 
@@ -109,10 +110,12 @@ test_that("Test pattern_file_root_core() generate the right string list", {
     "\\.Rinstignore$",
     "^configure$",
     "^configure\\.win$",
+    "^configure\\.ucrt$",
     "^configure\\.ac$",
     "^configure\\.in$",
     "^cleanup$",
-    "^cleanup\\.win$"
+    "^cleanup\\.win$",
+    "^cleanup\\.ucrt$"
   )
 
   ls_target <- str_ls
