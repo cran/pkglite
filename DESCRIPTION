@@ -1,6 +1,6 @@
 Package: pkglite
 Title: Compact Package Representations
-Version: 0.2.5
+Version: 0.2.6
 Authors@R: c(
     person("Nan", "Xiao", role = c("aut"), comment = c(ORCID = "0000-0002-0250-5673")),
     person("Yilong", "Zhang", role = "aut"),
@@ -8,7 +8,8 @@ Authors@R: c(
     person("Amin", "Shirazi", role = "ctb"),
     person("Jeff", "Cheng", role = "ctb"),
     person("Danfeng", "Fu", role = "ctb"),
-    person("Benjamin", "Wang", email = "benjamin.wang@merck.com", role = c("aut", "cre")),
+    person("Benjamin", "Wang", role = "aut"),
+    person("Dickson", "Wanjau", email = "dickson.wanjau@merck.com", role = c("aut", "cre")),
     person("Merck & Co., Inc., Rahway, NJ, USA and its affiliates", role = "cph")
     )
 Description: A tool, grammar, and standard to represent and exchange
@@ -24,15 +25,16 @@ Imports: crayon, magrittr, remotes
 Suggests: covr, knitr, rmarkdown, testthat
 RoxygenNote: 7.3.3
 NeedsCompilation: no
-Packaged: 2026-02-24 15:31:52 UTC; xiaonan4
+Packaged: 2026-06-11 19:57:16 UTC; wanjau
 Author: Nan Xiao [aut] (ORCID: <https://orcid.org/0000-0002-0250-5673>),
   Yilong Zhang [aut],
   Keaven Anderson [aut],
   Amin Shirazi [ctb],
   Jeff Cheng [ctb],
   Danfeng Fu [ctb],
-  Benjamin Wang [aut, cre],
+  Benjamin Wang [aut],
+  Dickson Wanjau [aut, cre],
   Merck & Co., Inc., Rahway, NJ, USA and its affiliates [cph]
-Maintainer: Benjamin Wang <benjamin.wang@merck.com>
+Maintainer: Dickson Wanjau <dickson.wanjau@merck.com>
 Repository: CRAN
-Date/Publication: 2026-02-24 22:30:02 UTC
+Date/Publication: 2026-06-12 07:00:08 UTC
